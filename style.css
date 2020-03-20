@@ -1,0 +1,142 @@
+body {
+    background: #2e353d;
+
+}
+
+.container {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+.wrp-field {
+    float: left;
+}
+
+.header {
+    background-color: rgba(14, 140, 212, 0.9);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 60px;
+    padding: 20px;
+    max-width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
+
+button {
+    width: 150px;
+    padding: 22px;
+    margin: 17px;
+    color: white;
+    background: #0467d8;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 20px;
+    display: block;
+    margin: 26px auto;
+    font-size: 24px;
+}
+
+button:hover {
+    background: #0076c5;
+}
+
+button:active {
+    background: #02c9fb;
+    color: black;
+}
+
+hr {
+    border: 2px solid rgb(193, 0, 76);
+    margin: 30px;
+}
+
+#game,
+#gamePlayer {
+    border-collapse: collapse;
+    margin: 0;
+    min-height: 200px;
+}
+
+.wrp {
+    background-color: #2e353d;
+    border: 11px solid rgb(0, 154, 193);
+    width: 600px;
+    border-radius: 40px;
+    margin: 30px 30px 30px 0;
+    padding: 10px;
+}
+.hint{
+    background-color: green;
+}
+#message {
+    color: #bd0936;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+    margin-top: 30px;
+}
+
+.score {
+    color: #177cff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.menu {
+    padding-top: 40px;
+    width: 350px;
+    height: 250px;
+    margin-top: 30px;
+    background-color: rgba(255, 255, 255, 0.8);
+    float: right;
+}
+
+.numbers {
+    float: left;
+    color: white;
+}
+
+.numbers div {
+    height: 23px;
+}
+
+.letters {
+    float: left;
+    color: white;
+    width: 23px;
+    height: 20px;
+    text-align: center;
+}
+
+.lettersArr {
+    width: 267px;
+    height: 20px;
+}
+
+td {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #eee;
+    color: white;
+    font-family: arial;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 0px;
+}
+
+
+.ship4,
+.ship3,
+.ship2,
+.ship1,
+.ship0 {
+    /* background: #e5e5e5; */
+}
