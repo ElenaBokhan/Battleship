@@ -54,7 +54,7 @@ class Board {
     }
 
     getCellElem(x, y) {
-        return document.querySelector(`tr:nth-child(${y}) td:nth-child(${x})`);
+        return this.boardGame.querySelector(`tr:nth-child(${y}) td:nth-child(${x})`);
     }
 
 }
