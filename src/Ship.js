@@ -6,6 +6,7 @@ class Ship {
         this.currentCEllsShip = [];
         this.currentSiblingsForNextStep = [];
         this.currentSiblingsShip = [];
+        this.allShipsPlayer = []
         this.i = 0;
         this.j = 0;
         this.lengthShip = 4;
@@ -18,12 +19,9 @@ class Ship {
         this.boardPlayer = boardPlayer;
         this.game = game;
     }
-    // getAllPossibleCells() {
-    //     this.board.boardGame.querySelectorAll("td").forEach((elem) => {
-    //         this.possibleCells.push(elem)
-    //     })
-    // }
+
     getAllPossibleCells() {
+        this.possibleCells = [];
         for (let y = 1; y <= this.setting.rowsCount; y++) {
             for (let x = 1; x <= this.setting.colsCount; x++) {
                 let arr = {
@@ -71,28 +69,29 @@ class Ship {
         this.amount = 1;
     }
     getPlayerArrange(event) {
-        let cellsForNextStep = this.getSiblingsCoordsForNextStep(
-            this.x,
-            this.y
-        );
-        this.getCoordsPlayerSell(event);
-        let currentCell = {
-            x: this.x,
-            y: this.y
-        };
+        let cellsForNextStep = this.getSiblingsCoordsForNextStep(this.x, this.y);
+        let coords = this.getCoordsPlayerSell(event);
         if (!(this.i == 0)) {
-            if (!this.isArrayHaveElem(cellsForNextStep, currentCell)) {
+            if (!this.isArrayHaveElem(cellsForNextStep, coords)) {
                 this.game.message.innerText =
                     "Палубы корабля должны находится рядом";
                 return;
             }
         }
+        this.x = coords.x;
+        this.y = coords.y;
+        let currentCell = {
+            x: this.x,
+            y: this.y
+        };
+
         let currentSiblings = this.getSiblingsCoords(this.x, this.y);
         if (this.isSiblingsNotEmpty(currentSiblings)) {
             this.game.message.innerText = "Корабли не могут стоять рядом";
             return;
         }
         this.renderPlayerCell(event);
+        this.allShipsPlayer.push(currentCell);
         this.i++;
         if (this.i == this.lengthShip) {
             this.j++;
@@ -101,33 +100,26 @@ class Ship {
         return;
     }
     getCoordsPlayerSell(event) {
-        this.x =
-            event.target.offsetLeft /
-                Math.floor(
-                    event.currentTarget.offsetWidth / this.setting.colsCount
-                ) +
-            1;
-        this.y =
-            event.target.offsetTop /
-                Math.floor(
-                    event.currentTarget.offsetHeight / this.setting.rowsCount
-                ) +
-            1;
+        let coords = {
+            x: event.target.offsetLeft / Math.floor(event.target.offsetParent.offsetWidth / this.setting.colsCount) + 1,
+            y: event.target.offsetTop / Math.floor(event.target.offsetParent.offsetHeight / this.setting.rowsCount) + 1
+        }
+        return coords;
     }
     renderPlayerCell(event) {
         let cell = event.target;
         cell.style.background = "green";
         cell.classList.add(`ship${this.lengthShip}`);
+        cell.classList.add(`number${this.j}`);
         cell.innerText = `${this.lengthShip}`;
     }
     getFirstCell(length) {
         // получаю рандомный элемент
-        let randomCell = this.possibleCells[
-            Math.floor(Math.random() * this.possibleCells.length)
-        ];
+
+        let randomCell = this.getRandomCoords()
         let cellShip = this.board.getCellElem(randomCell.x, randomCell.y);
         cellShip.classList.add(`ship${this.lengthShip}`);
-        //cellShip.style.backgroundColor = "yellow";
+
         this.getAllSiblings(randomCell.x, randomCell.y);
 
         //добавляю готовую ячейку в массив хранящий все ячейки текущего корабля
@@ -137,17 +129,13 @@ class Ship {
             this.getSiblingsForNextStep(randomCell.x, randomCell.y);
         }
     }
+    getRandomCoords() {
+        return this.possibleCells[Math.floor(Math.random() * this.possibleCells.length)];
+    }
     getNextCells(length) {
-        let nextRandomCellForShip = Math.floor(
-            Math.random() * this.currentSiblingsForNextStep.length
-        );
-        let nextCellCoords = this.currentSiblingsForNextStep[
-            nextRandomCellForShip
-        ];
-        let nextCellShip = this.board.getCellElem(
-            nextCellCoords.x,
-            nextCellCoords.y
-        );
+        let nextRandomCellForShip = Math.floor(Math.random() * this.currentSiblingsForNextStep.length);
+        let nextCellCoords = this.currentSiblingsForNextStep[nextRandomCellForShip];
+        let nextCellShip = this.board.getCellElem(nextCellCoords.x, nextCellCoords.y);
         nextCellShip.classList.add(`ship${this.lengthShip}`);
         this.currentCEllsShip.push(nextCellCoords);
 
@@ -162,7 +150,7 @@ class Ship {
             x: this.x,
             y: this.y
         };
-        this.deleteCurrentCellFromSiblingsArray(currentCoord);
+        this.deleteCellFromArray(currentCoord, this.currentSiblingsShip);
 
         this.getAllSiblings(this.x, this.y);
         this.getSiblingsForNextStep(this.x, this.y);
@@ -172,33 +160,18 @@ class Ship {
         let siblingsCoordsForNextStep = this.getSiblingsCoordsForNextStep(x, y);
 
         for (let elem of siblingsCoordsForNextStep) {
-            if (
-                this.possibleCells.find(
-                    element => element.x == elem.x && element.y == elem.y
-                )
-            ) {
-                let siblingsForNextStep = this.board.getCellElem(
-                    elem.x,
-                    elem.y
-                );
-                if (
-                    this.currentSiblingsForNextStep.find(
-                        element => element.x == elem.x && element.y == elem.y
-                    )
-                )
+            if (this.possibleCells.find(element => element.x == elem.x && element.y == elem.y)) {
+                let siblingsForNextStep = this.board.getCellElem(elem.x, elem.y);
+                if (this.currentSiblingsForNextStep.find(element => element.x == elem.x && element.y == elem.y))
                     continue;
-                if (
-                    siblingsForNextStep != null &&
-                    siblingsForNextStep.classList.length == 0
-                ) {
+                if (siblingsForNextStep != null && siblingsForNextStep.classList.length == 0) {
                     this.currentSiblingsForNextStep.push(elem);
                 }
             }
         }
     }
     getSiblingsCoordsForNextStep(x, y) {
-        let siblings = [
-            {
+        let siblings = [{
                 x: x,
                 y: y - 1
             },
@@ -225,21 +198,16 @@ class Ship {
     }
     getAllSiblings(x, y) {
         let siblingsCoords = this.getSiblingsCoords(x, y);
-
         for (let elem of siblingsCoords) {
             let siblings = this.board.getCellElem(elem.x, elem.y);
             if (this.isArrayHaveElem(this.currentSiblingsShip, elem)) continue;
-
             if (siblings != null && siblings.classList.length == 0) {
                 this.currentSiblingsShip.push(elem);
-
-                //siblings.style.backgroundColor = "green";
             }
         }
     }
     getSiblingsCoords(x, y) {
-        let siblingsCoords = [
-            {
+        let siblingsCoords = [{
                 x: x - 1,
                 y: y - 1
             },
@@ -276,24 +244,22 @@ class Ship {
     }
 
     isArrayHaveElem(array, elem) {
-        let alreadyHave = array.find(
-            element => element.x == elem.x && element.y == elem.y
-        );
+        let alreadyHave = array.find(element => element.x == elem.x && element.y == elem.y);
         return alreadyHave;
     }
     isSiblingsNotEmpty(currentSiblings) {
         for (let current of currentSiblings) {
             let siblings = this.boardPlayer.getCellElem(current.x, current.y);
             if (siblings == null) continue;
-            if (siblings.classList.contains(`ship${this.lengthShip}`)) continue;
+            if (siblings.classList.contains(`ship${this.lengthShip}`) && siblings.classList.contains(`number${this.j}`)) continue;
             if (siblings.classList.length != 0) return true;
         }
     }
-    deleteCurrentCellFromSiblingsArray(currentCoord) {
-        let index = this.currentSiblingsShip.findIndex(
-            item => item.x === currentCoord.x && item.y === currentCoord.y
+    deleteCellFromArray(cell, array) {
+        let index = array.findIndex(
+            item => item.x === cell.x && item.y === cell.y
         );
-        this.currentSiblingsShip.splice(index, 1);
+        array.splice(index, 1);
     }
     deleteCellsFromArr(arr, array) {
         for (let current of arr) {
@@ -304,16 +270,5 @@ class Ship {
                 array.splice(array.indexOf(alreadyHave), 1);
             }
         }
-    }
-
-    playerArrangeShip() {
-        this.getAllPossibleCells();
-        document
-            .getElementById("gamePlayer")
-            .addEventListener("click", elem => {
-                if (this.game.isClickOnEmptyCell(elem)) {
-                    this.arrangeShips(elem);
-                }
-            });
     }
 }

@@ -12,11 +12,24 @@ class Game {
         this.menu = menu;
     }
     run() {
-        document.addEventListener("click", (event) => {
-            this.handlerClick(event)
-        })
+        document.addEventListener("click", elem => {
+            if (this.ship.allShipsPlayer.length < 20) {
+                if (this.isClickOnEmptyCell(elem)) {
+                    this.ship.arrangeShips(elem);
+                }
+            } else {
+                this.handlerClick(event)
+            }
+        });
     }
+
     handlerClick(event) {
+        if (this.status.condition == "playerMove") {
+            this.playerStep(event);
+        }
+
+    }
+    playerStep(event) {
         if (this.isClickCorrect(event)) {
             let hit = event.target;
             if (this.isHitTheMark(hit)) {
@@ -28,7 +41,10 @@ class Game {
                 }
             } else {
                 hit.innerText = "X";
-                this.message.innerText = "Мимо"
+                this.message.innerText = "Мимо";
+                this.status.setMoveComputer();
+                event.preventDefault();
+                this.computerStep();
             }
         }
     }
@@ -47,9 +63,18 @@ class Game {
         if (!hit.classList.length == "") return true;
     }
 
-    computerStep(){
-
+    computerStep() {
+        let randomCell = this.ship.getRandomCoords()
+        let cellShip = this.boardPlayer.getCellElem(randomCell.x, randomCell.y);
+        if (cellShip.classList.length == 0) {
+            cellShip.innerText = "X";
+            this.ship.deleteCellFromArray(cellShip, this.ship.possibleCells);
+            this.message.innerText = "Ваш ход";
+            this.status.setMovePlayer();
+            return;
+        } else {
+            cellShip.style.background = "red";
+            this.computerStep();
+        }
     }
-
-
 }

@@ -20,7 +20,7 @@ window.addEventListener("load", (event) => {
     boardPlayer.renderBoard();
     ship.getAllPossibleCells();
     ship.arrangeShips();
-    ship.playerArrangeShip();
     menu.run()
-    //game.run();
+    ship.getAllPossibleCells();
+    game.run();
 })
