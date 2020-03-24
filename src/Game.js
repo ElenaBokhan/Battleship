@@ -66,11 +66,11 @@ class Game {
     isKilledShip(hit) {
         let numOfDeck = hit.getAttribute("deck");
         let numShip = hit.getAttribute("data-number");
-        let allships = document.querySelectorAll(`table[id=game] td`);
-        // document.querySelectorAll("table[id=game] td")
-        // [deck=${numOfDeck}]
-        let newAllShips = allships.filter(elem => elem.getAttribute("data-number") == numShip);
-        if (newAllShips.length % numOfDeck == 0) return true;
+        let allHit = this.ship.killedShips.filter(item=>(item.getAttribute("deck")==`${numOfDeck}` && item.getAttribute("data-number")==`${numShip}`))
+        //let allships = this.ship.killedShips.querySelectorAll(`td[deck=\"${numOfDeck}\"]`);
+              
+        //let newAllShips = allships.filter(elem => elem.getAttribute("data-number") == numShip);
+        if (allHit.length % numOfDeck == 0) return true;
     }
     computerStep() {
         let randomCell = this.ship.getRandomCoords()
