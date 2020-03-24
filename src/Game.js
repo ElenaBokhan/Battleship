@@ -34,7 +34,8 @@ class Game {
             let hit = event.target;
             if (this.isHitTheMark(hit)) {
                 hit.style.background = "red";
-                if (hit.classList.contains("ship1")) {
+                this.ship.killedShips.push(hit);
+                if (this.isKilledShip(hit)) {
                     this.message.innerText = "Убил"
                 } else {
                     this.message.innerText = "Ранил"
@@ -60,13 +61,21 @@ class Game {
         if (event.target.innerText == "") return true;
     }
     isHitTheMark(hit) {
-        if (!hit.classList.length == "") return true;
+        if (hit.hasAttribute("deck")) return true;
     }
-
+    isKilledShip(hit) {
+        let numOfDeck = hit.getAttribute("deck");
+        let numShip = hit.getAttribute("data-number");
+        let allships = document.querySelectorAll(`table[id=game] td`);
+        // document.querySelectorAll("table[id=game] td")
+        // [deck=${numOfDeck}]
+        let newAllShips = allships.filter(elem => elem.getAttribute("data-number") == numShip);
+        if (newAllShips.length % numOfDeck == 0) return true;
+    }
     computerStep() {
         let randomCell = this.ship.getRandomCoords()
         let cellShip = this.boardPlayer.getCellElem(randomCell.x, randomCell.y);
-        if (cellShip.classList.length == 0) {
+        if (!cellShip.hasAttribute("deck")) {
             cellShip.innerText = "X";
             this.ship.deleteCellFromArray(cellShip, this.ship.possibleCells);
             this.message.innerText = "Ваш ход";
