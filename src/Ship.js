@@ -8,6 +8,7 @@ class Ship {
         this.currentSiblingsShip = [];
         this.allShipsPlayer = [];
         this.killedShips = [];
+        this.killedShipsPlayers = [];
         this.i = 0;
         this.j = 0;
         this.lengthShip = 4;
@@ -55,6 +56,8 @@ class Ship {
                 this.i = 0;
                 this.deleteCellsFromArr(this.currentSiblingsShip, this.possibleCells);
                 this.deleteCellsFromArr(this.currentCEllsShip, this.possibleCells);
+                this.currentCEllsShip = [];
+                this.currentSiblingsShip = [];
             }
             this.j = 0;
             this.amount++;
@@ -104,32 +107,31 @@ class Ship {
     renderPlayerCell(event) {
         let cell = event.target;
         cell.style.background = "green";
-        cell.setAttribute("deck", `${this.lengthShip}`);
+        cell.setAttribute("deck-player", `${this.lengthShip}`);
         cell.dataset.number = `${this.j}`;
         cell.innerText = `${this.lengthShip}`;
     }
-    getFirstCell(length) {
+    getFirstCell() {
         // получаю рандомный элемент
 
-        let randomCell = this.getRandomCoords()
+        let randomCell = this.getRandomCoords(this.possibleCells);
         let cellShip = this.board.getCellElem(randomCell.x, randomCell.y);
         cellShip.setAttribute("deck", `${this.lengthShip}`);
         cellShip.dataset.number = `${this.j}`;
-        this.getAllSiblings(randomCell.x, randomCell.y);
+        this.getAllSiblings(randomCell.x, randomCell.y,this.board);
 
         //добавляю готовую ячейку в массив хранящий все ячейки текущего корабля
         this.currentCEllsShip.push(randomCell);
         if (this.lengthShip > 1) {
             //у текущей ячейки делаю выборку координат для последущих вариантов хода
-            this.getSiblingsForNextStep(randomCell.x, randomCell.y);
+            this.getSiblingsForNextStep(randomCell.x, randomCell.y,this.board);
         }
     }
-    getRandomCoords() {
-        return this.possibleCells[Math.floor(Math.random() * this.possibleCells.length)];
+    getRandomCoords(array) {
+        return array[Math.floor(Math.random() * array.length)];
     }
-    getNextCells(length) {
-        let nextRandomCellForShip = Math.floor(Math.random() * this.currentSiblingsForNextStep.length);
-        let nextCellCoords = this.currentSiblingsForNextStep[nextRandomCellForShip];
+    getNextCells() {       
+        let nextCellCoords=this.getRandomCoords(this.currentSiblingsForNextStep);
         let nextCellShip = this.board.getCellElem(nextCellCoords.x, nextCellCoords.y);
 
         nextCellShip.setAttribute("deck", `${this.lengthShip}`);
@@ -139,7 +141,7 @@ class Ship {
 
         //nextCellShip.style.backgroundColor = "yellow";
 
-        this.deleteCurrentCellFromPossibleStepArray(nextCellCoords);
+        this.deleteCellFromArray(nextCellCoords,this.currentSiblingsForNextStep);
 
         this.x = nextCellCoords.x;
         this.y = nextCellCoords.y;
@@ -150,16 +152,16 @@ class Ship {
         };
         this.deleteCellFromArray(currentCoord, this.currentSiblingsShip);
 
-        this.getAllSiblings(this.x, this.y);
-        this.getSiblingsForNextStep(this.x, this.y);
+        this.getAllSiblings(this.x, this.y,this.board);
+        this.getSiblingsForNextStep(this.x, this.y,this.board);
     }
 
-    getSiblingsForNextStep(x, y) {
+    getSiblingsForNextStep(x, y,field) {
         let siblingsCoordsForNextStep = this.getSiblingsCoordsForNextStep(x, y);
 
         for (let elem of siblingsCoordsForNextStep) {
             if (this.possibleCells.find(element => element.x == elem.x && element.y == elem.y)) {
-                let siblingsForNextStep = this.board.getCellElem(elem.x, elem.y);
+                let siblingsForNextStep = field.getCellElem(elem.x, elem.y);
                 if (this.currentSiblingsForNextStep.find(element => element.x == elem.x && element.y == elem.y))
                     continue;
                 if (siblingsForNextStep != null && siblingsForNextStep.getAttribute("deck") == null) {
@@ -187,14 +189,11 @@ class Ship {
             }
         ];
         return siblings;
-    }
-    deleteCurrentCellFromPossibleStepArray(nextCellCoords) {
-        this.currentSiblingsForNextStep.splice(this.currentSiblingsForNextStep.indexOf(nextCellCoords), 1);
-    }
-    getAllSiblings(x, y) {
+    }    
+    getAllSiblings(x, y,field) {
         let siblingsCoords = this.getSiblingsCoords(x, y);
         for (let elem of siblingsCoords) {
-            let siblings = this.board.getCellElem(elem.x, elem.y);
+            let siblings = field.getCellElem(elem.x, elem.y);
             if (this.isArrayHaveElem(this.currentSiblingsShip, elem)) continue;
             if (siblings != null && siblings.getAttribute("deck") == null) {
                 this.currentSiblingsShip.push(elem);
@@ -246,8 +245,8 @@ class Ship {
         for (let current of currentSiblings) {
             let siblings = this.boardPlayer.getCellElem(current.x, current.y);
             if (siblings == null) continue;
-            if (siblings.getAttribute("deck") == `${this.lengthShip}` && siblings.getAttribute("data-number") == `${this.j}`) continue;
-            if (siblings.hasAttribute("deck")) return true;
+            if (siblings.getAttribute("deck-player") == `${this.lengthShip}` && siblings.getAttribute("data-number") == `${this.j}`) continue;
+            if (siblings.hasAttribute("deck-player")) return true;
         }
     }
     deleteCellFromArray(cell, array) {

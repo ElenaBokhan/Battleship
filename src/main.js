@@ -13,8 +13,8 @@ window.addEventListener("load", (event) => {
     ship.init(setting, board, boardPlayer, game)
     game.init(setting, board, boardPlayer, ship, status, menu);
 
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
 
     board.renderBoard();
     boardPlayer.renderBoard();

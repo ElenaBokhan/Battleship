@@ -7,7 +7,7 @@ class Menu {
     run() {
         this.button.addEventListener("click", (event) => {
             document.querySelectorAll("table[id=game] td").forEach((elem) => {
-                if (elem.classList.length > 0) {
+                if (elem.hasAttribute("deck")) {
                     if (this.hint == false) {
                         elem.classList.add("hint");                                                
                     } else {
