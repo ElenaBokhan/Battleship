@@ -253,7 +253,9 @@ class Ship {
         let index = array.findIndex(
             item => item.x === cell.x && item.y === cell.y
         );
-        array.splice(index, 1);
+        if(index!=-1){
+            array.splice(index, 1);
+        }        
     }
     deleteCellsFromArr(arr, array) {
         for (let current of arr) {

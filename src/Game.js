@@ -37,7 +37,7 @@ class Game {
                 this.ship.killedShips.push(hit);
                 if (this.isKilledShip(hit, this.ship.killedShips,"deck")) {
                     this.message.innerText = "Убил"
-                    if (this.isGameWon()) {
+                    if (this.isGameWon(this.ship.killedShips)) {
                         this.message.innerText = "Вы выиграли!";
                         return;
                     }
@@ -75,8 +75,8 @@ class Game {
         let allHit = array.filter(item => (item.getAttribute(attribute) == `${numOfDeck}` && item.getAttribute("data-number") == `${numShip}`))
         if (allHit.length % numOfDeck == 0) return true;
     }
-    isGameWon() {
-        return this.ship.killedShips.length == 20;
+    isGameWon(array) {
+        return array.length == 20;
     }
     computerStep() {
         if (this.ship.currentCEllsShip.length == 0) {
@@ -84,6 +84,7 @@ class Game {
             this.ship.x = randomCell.x;
             this.ship.y = randomCell.y;
         }else{
+            this.ship.deleteCellFromArray({x:this.ship.x,y:this.ship.y}, this.ship.currentSiblingsForNextStep);
             let nextCell = this.ship.getRandomCoords(this.ship.currentSiblingsForNextStep);
             this.ship.x = nextCell.x;
             this.ship.y = nextCell.y;
@@ -99,6 +100,10 @@ class Game {
             this.ship.getAllSiblings(this.ship.x, this.ship.y, this.boardPlayer);
             cellShip.style.background="red";
             if (this.isKilledShip(cellShip, this.ship.killedShipsPlayers,"deck-player")) {
+                if (this.isGameWon(this.ship.killedShips)) {
+                    this.message.innerText = "Вы проиграли!";
+                    return;
+                }
                 this.ship.deleteCellFromArray(cellShipCoords, this.ship.possibleCells);
                 this.ship.deleteCellsFromArr(this.ship.currentSiblingsShip, this.ship.possibleCells);
                 this.ship.currentCEllsShip = [];
@@ -110,8 +115,7 @@ class Game {
                 }, 1000);
             } else {
                 this.message.innerText = "Ранен";
-                this.ship.getSiblingsForNextStep(this.ship.x, this.ship.y, this.boardPlayer);
-                this.ship.deleteCellFromArray(cellShipCoords, this.ship.currentSiblingsForNextStep);
+                this.ship.getSiblingsForNextStep(this.ship.x, this.ship.y, this.boardPlayer);                
                 this.ship.deleteCellFromArray(cellShipCoords, this.ship.possibleCells);                
                 setTimeout(() => {
                     this.computerStep(); 
@@ -120,6 +124,7 @@ class Game {
         } else {
             cellShip.innerText = "X";
             this.ship.deleteCellFromArray(cellShipCoords, this.ship.possibleCells);
+            this.ship.deleteCellFromArray(cellShipCoords, this.ship.currentSiblingsForNextStep);
             this.message.innerText = "Ваш ход";
             this.status.setMovePlayer();
             return;
