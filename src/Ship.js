@@ -133,14 +133,9 @@ class Ship {
     getNextCells() {       
         let nextCellCoords=this.getRandomCoords(this.currentSiblingsForNextStep);
         let nextCellShip = this.board.getCellElem(nextCellCoords.x, nextCellCoords.y);
-
         nextCellShip.setAttribute("deck", `${this.lengthShip}`);
         nextCellShip.dataset.number = `${this.j}`
-
-        this.currentCEllsShip.push(nextCellCoords);
-
-        //nextCellShip.style.backgroundColor = "yellow";
-
+        this.currentCEllsShip.push(nextCellCoords);      
         this.deleteCellFromArray(nextCellCoords,this.currentSiblingsForNextStep);
 
         this.x = nextCellCoords.x;
@@ -151,14 +146,12 @@ class Ship {
             y: this.y
         };
         this.deleteCellFromArray(currentCoord, this.currentSiblingsShip);
-
         this.getAllSiblings(this.x, this.y,this.board);
         this.getSiblingsForNextStep(this.x, this.y,this.board);
     }
 
     getSiblingsForNextStep(x, y,field) {
         let siblingsCoordsForNextStep = this.getSiblingsCoordsForNextStep(x, y);
-
         for (let elem of siblingsCoordsForNextStep) {
             if (this.possibleCells.find(element => element.x == elem.x && element.y == elem.y)) {
                 let siblingsForNextStep = field.getCellElem(elem.x, elem.y);
@@ -170,6 +163,7 @@ class Ship {
             }
         }
     }
+
     getSiblingsCoordsForNextStep(x, y) {
         let siblings = [{
                 x: x,
@@ -189,7 +183,8 @@ class Ship {
             }
         ];
         return siblings;
-    }    
+    }  
+
     getAllSiblings(x, y,field) {
         let siblingsCoords = this.getSiblingsCoords(x, y);
         for (let elem of siblingsCoords) {
@@ -200,6 +195,7 @@ class Ship {
             }
         }
     }
+
     getSiblingsCoords(x, y) {
         let siblingsCoords = [{
                 x: x - 1,
@@ -241,6 +237,7 @@ class Ship {
         let alreadyHave = array.find(element => element.x == elem.x && element.y == elem.y);
         return alreadyHave;
     }
+    
     isSiblingsNotEmpty(currentSiblings) {
         for (let current of currentSiblings) {
             let siblings = this.boardPlayer.getCellElem(current.x, current.y);

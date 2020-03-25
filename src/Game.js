@@ -76,10 +76,9 @@ class Game {
         let allHit = array.filter(item => (item.getAttribute(attribute) == `${numOfDeck}` && item.getAttribute("data-number") == `${numShip}`))
         if (allHit.length % numOfDeck == 0) {
             if(attribute=="deck"){
-                let scoreField = +(document.querySelector(`div[score=\"${numOfDeck}\"]`).innerHTML);
-                scoreField++;
-            }
-            
+                let scoreField = document.querySelector(`div[score=\"${+numOfDeck}\"]`);
+                scoreField.innerText++;
+            }            
             return true;}
     }
     isGameWon(array) {
@@ -115,13 +114,11 @@ class Game {
                 this.ship.deleteCellsFromArr(this.ship.currentSiblingsShip, this.ship.possibleCells);
                 this.ship.currentCEllsShip = [];
                 this.ship.currentSiblingsForNextStep = [];
-                this.ship.currentSiblingsShip = [];
-                //this.message.innerText = "Убит";
+                this.ship.currentSiblingsShip = [];                
                 setTimeout(() => {
                     this.computerStep(); 
                 }, 2000);
-            } else {
-                //this.message.innerText = "Ранен";
+            } else {                
                 this.ship.getSiblingsForNextStep(this.ship.x, this.ship.y, this.boardPlayer);                
                 this.ship.deleteCellFromArray(cellShipCoords, this.ship.possibleCells);                
                 setTimeout(() => {
