@@ -18,6 +18,10 @@ class Game {
                     this.ship.arrangeShips(elem);
                 }
             } else {
+                if (this.isGameWon(this.ship.killedShips)||this.isGameWon(this.ship.killedShipsPlayers)) {
+                    event.stopPropogation();
+                    event.preventDefault();  
+                }
                 this.handlerClick(event)
             }
         });
@@ -39,6 +43,9 @@ class Game {
                     this.message.innerText = "Убит"
                     if (this.isGameWon(this.ship.killedShips)) {
                         this.message.innerText = "Вы выиграли!";
+                        setTimeout(() => {
+                            if(confirm("Хотите сыграть еще раз?")) location.reload();
+                        }, 1000);                        
                         return;
                     }
                 } else {
@@ -106,8 +113,11 @@ class Game {
             this.ship.getAllSiblings(this.ship.x, this.ship.y, this.boardPlayer);
             cellShip.style.background="red";
             if (this.isKilledShip(cellShip, this.ship.killedShipsPlayers,"deck-player")) {
-                if (this.isGameWon(this.ship.killedShips)) {
+                if (this.isGameWon(this.ship.killedShipsPlayers)) {
                     this.message.innerText = "Вы проиграли!";
+                    setTimeout(() => {
+                        if(confirm("Хотите сыграть еще раз?")) location.reload();
+                    }, 1000);
                     return;
                 }
                 this.ship.deleteCellFromArray(cellShipCoords, this.ship.possibleCells);
@@ -132,6 +142,6 @@ class Game {
             this.messageStatus.innerText = "Ваш ход";
             this.status.setMovePlayer();
             return;
-        }
+        }        
     }
 }
