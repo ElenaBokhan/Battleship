@@ -94,6 +94,7 @@ class Ship {
         if (this.i == this.lengthShip) {
             this.j++;
             this.i = 0;
+            if(this.j==4) this.game.messageStatus.innerText = "Ваш ход";
         }
         return;
     }
