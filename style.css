@@ -1,17 +1,52 @@
-body {
-    background: #2e353d;
+*{
+    margin: 0;
+}
+body,html{
+    min-width: 100%;
+    min-height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
 
+body {
+    background-image: url(https://image.winudf.com/v2/image1/Y29tLmlicy5iYXR0bGVvZndhcnNoaXAuYmF0dGxlc2hpcC5uYXZhbF9zY3JlZW5fMV8xNTcxMTU5ODQ1XzAxOQ/screen-1.jpg?fakeurl=1&type=.jpg);
+background-repeat: no-repeat;
+background-size: cover;
 }
 
 .container {
     width: 1100px;
     margin: 0 auto;
+    min-height: 900px;
+    background: rgba(0,0,0,.5);
+    padding: 30px;
 }
 
 .wrp-field {
     float: left;
 }
+img{
+    float: left;
+}
+.discribe{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    width: 50%;
+    }
+.name-field{
+    color: white;
+    font-size: 24px;
+    text-align: center;
 
+}
+.rules{
+    text-align: left;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+}
 .header {
     background-color: rgba(14, 140, 212, 0.9);
     color: white;
@@ -48,10 +83,24 @@ button:active {
     background: #02c9fb;
     color: black;
 }
-
+.block{
+    padding: 0 20px 0 20px;
+}
+.block::after{
+    content: "";    
+    display: block;
+    clear: both;
+}
+div[score]{
+    color:#0076c5;
+    font-size: 26px;
+    text-align: right;
+    margin-top: 10px;
+    font-weight: 600;
+}
 hr {
-    border: 2px solid rgb(193, 0, 76);
-    margin: 30px;
+    border: 1px solid rgb(255, 255, 255);
+    margin: 10px;
 }
 
 #game,
@@ -68,33 +117,42 @@ hr {
     border-radius: 40px;
     margin: 30px 30px 30px 0;
     padding: 10px;
+    position: relative;
 }
-
+.name-ship{
+    color: rgb(0, 154, 193);
+    font-size: 18px;
+    text-align: right;
+}
 .hint {
     background-color: green;
 }
 
-#message {
-    color: #bd0936;
+#message, #status {
+    color: rgb(0, 154, 193);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 30px;
     text-align: center;
     font-weight: 700;
     margin-top: 30px;
 }
-
+#status{
+    color: white;
+}
 .score {
-    color: #177cff;
+    color: rgba(0,0,0,.5);
     font-family: Arial, Helvetica, sans-serif;
     font-size: 30px;
     text-align: center;
     font-weight: 700;
+    margin-bottom: 20px;
+    
 }
 
 .menu {
-    padding-top: 40px;
+    padding:20px 20px 40px;
     width: 350px;
-    height: 550px;
+    
     margin-top: 30px;
     background-color: rgba(255, 255, 255, 0.8);
     float: right;

@@ -1,7 +1,7 @@
 class Game {
     constructor() {
         this.message = document.getElementById("message");
-
+        this.messageStatus = document.getElementById("status");
     }
     init(setting, board, boardPlayer, ship, status, menu) {
         this.setting = setting;
@@ -36,22 +36,23 @@ class Game {
                 hit.style.background = "red";
                 this.ship.killedShips.push(hit);
                 if (this.isKilledShip(hit, this.ship.killedShips,"deck")) {
-                    this.message.innerText = "Убил"
+                    this.message.innerText = "Убит"
                     if (this.isGameWon(this.ship.killedShips)) {
                         this.message.innerText = "Вы выиграли!";
                         return;
                     }
                 } else {
-                    this.message.innerText = "Ранил"
+                    this.message.innerText = "Ранен"
                 }
             } else {
                 hit.innerText = "X";
                 this.message.innerText = "Мимо";
+                this.messageStatus.innerText = "Ход соперника";
                 this.status.setMoveComputer();
                 event.preventDefault();
                 setTimeout(() => {
                     this.computerStep(); 
-                }, 1000); 
+                }, 2000); 
             }
         }
     }
@@ -73,7 +74,13 @@ class Game {
         let numOfDeck = hit.getAttribute(attribute);
         let numShip = hit.getAttribute("data-number");
         let allHit = array.filter(item => (item.getAttribute(attribute) == `${numOfDeck}` && item.getAttribute("data-number") == `${numShip}`))
-        if (allHit.length % numOfDeck == 0) return true;
+        if (allHit.length % numOfDeck == 0) {
+            if(attribute=="deck"){
+                let scoreField = +(document.querySelector(`div[score=\"${numOfDeck}\"]`).innerHTML);
+                scoreField++;
+            }
+            
+            return true;}
     }
     isGameWon(array) {
         return array.length == 20;
@@ -109,23 +116,23 @@ class Game {
                 this.ship.currentCEllsShip = [];
                 this.ship.currentSiblingsForNextStep = [];
                 this.ship.currentSiblingsShip = [];
-                this.message.innerText = "Убит";
+                //this.message.innerText = "Убит";
                 setTimeout(() => {
                     this.computerStep(); 
-                }, 1000);
+                }, 2000);
             } else {
-                this.message.innerText = "Ранен";
+                //this.message.innerText = "Ранен";
                 this.ship.getSiblingsForNextStep(this.ship.x, this.ship.y, this.boardPlayer);                
                 this.ship.deleteCellFromArray(cellShipCoords, this.ship.possibleCells);                
                 setTimeout(() => {
                     this.computerStep(); 
-                }, 1000);
+                }, 2000);
             }
         } else {
             cellShip.innerText = "X";
             this.ship.deleteCellFromArray(cellShipCoords, this.ship.possibleCells);
             this.ship.deleteCellFromArray(cellShipCoords, this.ship.currentSiblingsForNextStep);
-            this.message.innerText = "Ваш ход";
+            this.messageStatus.innerText = "Ваш ход";
             this.status.setMovePlayer();
             return;
         }
